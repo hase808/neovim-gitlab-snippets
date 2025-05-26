@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "diagnostics": {
+    "globals": ["vim", "require"]
+  },
+  "workspace": {
+    "library": ["${workspace}/lua", "${workspace}"],
+    "maxPreload": 2000,
+    "preloadFileSize": 1000
+  },
+  "completion": {
+    "callSnippet": "Replace",
+    "displayContext": 1
+  },
+  "runtime": {
+    "version": "LuaJIT",
+    "path": [
+      "?.lua",
+      "?/init.lua",
+      "${workspace}/lua/?.lua",
+      "${workspace}/lua/?/init.lua"
+    ]
+  }
+}
