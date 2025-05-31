@@ -8,6 +8,25 @@
 
 A Neovim plugin that allows you to browse, preview, and insert GitLab code snippets directly from within Neovim. This plugin integrates with Telescope to provide a seamless UI experience.
 
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+  - [Commands](#commands)
+  - [Telescope Integration](#telescope-integration)
+  - [Workflow](#workflow)
+  - [Available Keybinds in Snippet List](#available-keybinds-in-snippet-list)
+  - [Snippet Metadata](#snippet-metadata)
+  - [Health Checks](#health-checks)
+- [Screenshots](#screenshots)
+- [Vectorcode](#vectorcode)
+- [Troubleshooting](#troubleshooting)
+  - [Token Issues](#token-issues)
+  - [Connection Problems](#connection-problems)
+
 ## Features
 
 - Configure multiple GitLab instances with different access tokens
@@ -121,6 +140,18 @@ Run `:checkhealth gitlab-snippets` to verify that:
 ![options](assets/options.png)
 
 ![snippets](assets/snippets.png)
+
+## Vectorcode
+
+- To use [VectorCode](https://github.com/Davidyz/VectorCode) in this repository, first initialize the VectorCode repository
+```bash
+vectorcode init
+```
+- Then you can vectorize the repository's files with the following command
+```bash
+vectorcode vectorise
+```
+- The configuration for which files are included in the vector database can be found under `.vectorcode/vectorcode.include`
 
 ## Troubleshooting
 
