@@ -1,0 +1,6 @@
+---
+include:
+  - project: uc/ci-templates
+    ref: v20250515
+    file:
+      - /release.gitlab-ci.yml
