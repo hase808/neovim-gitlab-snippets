@@ -20,7 +20,6 @@ A Neovim plugin that allows you to browse, preview, and insert GitLab code snipp
   - [Snippet Metadata](#snippet-metadata)
   - [Health Checks](#health-checks)
 - [Screenshots](#screenshots)
-- [Vectorcode](#vectorcode)
 - [Troubleshooting](#troubleshooting)
   - [Token Issues](#token-issues)
   - [Connection Problems](#connection-problems)
@@ -138,18 +137,6 @@ Run `:checkhealth gitlab-snippets` to verify that:
 ![options](assets/options.png)
 
 ![snippets](assets/snippets.png)
-
-## Vectorcode
-
-- To use [VectorCode](https://github.com/Davidyz/VectorCode) in this repository, first initialize the VectorCode repository
-```bash
-vectorcode init
-```
-- Then you can vectorize the repository's files with the following command
-```bash
-vectorcode vectorise
-```
-- The configuration for which files are included in the vector database can be found under `.vectorcode/vectorcode.include`
 
 ## Troubleshooting
 
