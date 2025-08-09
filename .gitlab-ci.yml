@@ -42,4 +42,5 @@ test:
     - git clone --depth 1 https://github.com/nvim-lua/plenary.nvim.git /tmp/plenary.nvim
   script:
     - echo "Running tests..."
+    - export PLENARY_DIR=/tmp/plenary.nvim
     - make test
