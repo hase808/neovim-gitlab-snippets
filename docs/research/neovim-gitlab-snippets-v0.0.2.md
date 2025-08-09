@@ -127,256 +127,66 @@ local lines = vim.split(content, "\n")
 
 ---
 
-## 🧪 Task 2: Comprehensive Testing Infrastructure
+## 🧪 Task 2: Minimal Testing Infrastructure
 
 ### Current State Analysis
 
 **Testing Status:** ❌ No existing test suite
 **Dependencies:** plenary.nvim (already required)
-**Risk Level:** 🟡 Medium - Adding new infrastructure
+**Risk Level:** 🟢 Low - Simple infrastructure only
 
 ### Proposed Testing Architecture
 
 #### 2.1 Testing Framework Selection
 
 **Recommended Stack:**
+- **Primary:** plenary.nvim only (minimal setup)
+- **No API mocking:** Too complex for this plugin scope
+- **No UI testing:** Telescope integration not worth testing complexity
 
-- **Primary:** plenary.nvim + busted (industry standard)
-- **Alternative:** vusted (if plenary integration issues)
-- **Mock Library:** luassert.mock for API mocking
-
-**Rationale:**
-
-- plenary.nvim already required as dependency
-- Established patterns in Neovim ecosystem
-- Excellent mocking capabilities for HTTP requests
-
-#### 2.2 Test Suite Structure
+#### 2.2 Minimal Test Suite Structure
 
 ```
 tests/
-├── minimal_init.lua              # Minimal Neovim config for testing
-├── fixtures/                     # Test data and mocks
-│   ├── mock_api_responses.json   # GitLab API response samples
-│   ├── test_configs.lua          # Various configuration scenarios
-│   └── sample_snippets.lua       # Sample snippet data
-├── gitlab-snippets/              # Main test modules
-│   ├── api_spec.lua              # API module tests
-│   ├── config_spec.lua           # Configuration tests
-│   ├── health_spec.lua           # Health check tests
-│   ├── picker_spec.lua           # Picker logic tests (limited)
-│   └── utils_spec.lua            # Utils tests (during migration)
-├── integration/                  # Integration tests
-│   ├── full_workflow_spec.lua    # End-to-end scenarios
-│   └── error_scenarios_spec.lua  # Error handling tests
-└── helpers/                      # Test utilities
-    ├── mock_gitlab.lua           # GitLab API mocking helpers
-    ├── test_utils.lua            # Common test utilities
-    └── assertions.lua            # Custom assertion helpers
+├── minimal_init.lua     # Basic plenary setup
+├── config_spec.lua      # Config parsing/validation
+└── health_spec.lua      # Dependency checks
 ```
 
-#### 2.3 Detailed Testing Plan
+#### 2.3 Focused Testing Plan
 
 **2.3.1 Configuration Module Tests (`config_spec.lua`)**
 
 ```lua
 describe("gitlab-snippets.config", function()
-  -- Test scenarios:
+  -- Essential tests only:
   -- ✅ Default configuration loading
   -- ✅ User configuration merging
-  -- ✅ Deep table merging behavior
   -- ✅ Instance retrieval by name
   -- ✅ Invalid configuration handling
-  -- ✅ Empty configuration scenarios
 end)
 ```
 
 **Priority:** 🔴 High
-**Coverage Target:** 95%
+**Coverage Target:** Basic functionality only
 **Complexity:** 🟢 Low
 
-**2.3.2 API Module Tests (`api_spec.lua`)**
-
-```lua
-describe("gitlab-snippets.api", function()
-  -- HTTP Status Code Handling:
-  -- ✅ 200 - Success responses
-  -- ✅ 401 - Unauthorized (invalid token)
-  -- ✅ 403 - Forbidden (insufficient permissions)
-  -- ✅ 404 - Resource not found
-  -- ✅ 500 - Server errors
-  -- ✅ Network timeouts
-  -- ✅ Invalid JSON responses
-
-  -- Token Resolution:
-  -- ✅ Instance-specific tokens (GITLAB_SNIPPETS_TOKEN_INSTANCE)
-  -- ✅ Fallback to generic token (GITLAB_SNIPPETS_TOKEN)
-  -- ✅ Missing token scenarios
-
-  -- API Endpoints:
-  -- ✅ list_user_snippets()
-  -- ✅ list_public_snippets()
-  -- ✅ list_all_snippets()
-  -- ✅ list_project_snippets()
-  -- ✅ get_snippet_content()
-  -- ✅ get_project_snippet_content()
-  -- ✅ test_connection()
-end)
-```
-
-**Priority:** 🔴 High
-**Coverage Target:** 90%
-**Complexity:** 🟡 Medium (requires HTTP mocking)
-
-**2.3.3 Health Check Tests (`health_spec.lua`)**
+**2.3.2 Health Check Tests (`health_spec.lua`)**
 
 ```lua
 describe("gitlab-snippets.health", function()
-  -- Dependency Checks:
+  -- Basic dependency checks:
   -- ✅ plenary.nvim availability
   -- ✅ telescope.nvim availability
-
-  -- Platform Compatibility:
-  -- ✅ macOS ARM detection
-  -- ✅ Unsupported OS warnings
-
-  -- Configuration Validation:
-  -- ✅ Instance configuration presence
-  -- ✅ Token availability verification
-  -- ✅ Connection testing integration
-
-  -- Neovim Version:
-  -- ✅ Version compatibility checks
-  -- ✅ Warning for older versions
+  -- ✅ Neovim version compatibility
 end)
 ```
 
 **Priority:** 🟡 Medium
-**Coverage Target:** 85%
+**Coverage Target:** Basic checks only
 **Complexity:** 🟢 Low
 
-**2.3.4 Picker Logic Tests (`picker_spec.lua`)**
-
-```lua
-describe("gitlab-snippets.picker", function()
-  -- Note: Limited testing due to Telescope UI complexity
-
-  -- Helper Functions:
-  -- ✅ get_snippet_type_from_url()
-  -- ✅ get_snippet_content() (integration with api)
-  -- ✅ get_snippet_metadata() (integration with api)
-  -- ✅ format_snippet_metadata()
-
-  -- Data Processing:
-  -- ✅ Snippet type detection and marking
-  -- ✅ Display name formatting
-  -- ✅ Author information handling
-  -- ✅ Error handling for failed API calls
-end)
-```
-
-**Priority:** 🟡 Medium
-**Coverage Target:** 60% (UI components excluded)
-**Complexity:** 🟡 Medium (Telescope integration)
-
-**2.3.5 Integration Tests (`integration/`)**
-
-```lua
-describe("Full Workflow Integration", function()
-  -- End-to-End Scenarios:
-  -- ✅ Complete setup → instance selection → snippet retrieval
-  -- ✅ Multi-instance configuration handling
-  -- ✅ Error recovery and user notification flows
-  -- ✅ Token rotation scenarios
-
-  -- Performance Tests:
-  -- ✅ Large snippet list handling
-  -- ✅ API response time tolerance
-  -- ✅ Memory usage validation
-end)
-```
-
-**Priority:** 🟡 Medium
-**Coverage Target:** 70%
-**Complexity:** 🔴 High (requires complex setup)
-
-#### 2.4 Mock Infrastructure
-
-**2.4.1 GitLab API Mocking Strategy**
-
-```lua
--- helpers/mock_gitlab.lua
-local M = {}
-
-M.mock_successful_response = function(data)
-  return {
-    status = 200,
-    body = vim.fn.json_encode(data)
-  }
-end
-
-M.mock_error_response = function(status, message)
-  return {
-    status = status,
-    body = message or ""
-  }
-end
-
-M.mock_snippets_list = function(count)
-  local snippets = {}
-  for i = 1, count do
-    table.insert(snippets, {
-      id = i,
-      title = "Test Snippet " .. i,
-      file_name = "test" .. i .. ".lua",
-      author = { name = "Test User", username = "testuser" },
-      created_at = "2024-01-01T00:00:00Z"
-    })
-  end
-  return M.mock_successful_response(snippets)
-end
-
-return M
-```
-
-**2.4.2 Environment Mocking**
-
-```lua
--- helpers/test_utils.lua
-local M = {}
-
-M.with_env = function(env_vars, test_fn)
-  -- Save current environment
-  local original_env = {}
-  for key, _ in pairs(env_vars) do
-    original_env[key] = os.getenv(key)
-  end
-
-  -- Set test environment
-  for key, value in pairs(env_vars) do
-    vim.fn.setenv(key, value)
-  end
-
-  -- Run test
-  local success, result = pcall(test_fn)
-
-  -- Restore environment
-  for key, value in pairs(original_env) do
-    vim.fn.setenv(key, value)
-  end
-
-  if not success then
-    error(result)
-  end
-  return result
-end
-
-return M
-```
-
-#### 2.5 Test Execution Infrastructure
-
-**2.5.1 Test Runner Configuration**
+#### 2.4 Test Execution Infrastructure
 
 **File:** `tests/minimal_init.lua`
 
@@ -388,53 +198,26 @@ local gitlab_snippets_dir = vim.fn.getcwd()
 vim.opt.rtp:prepend(plenary_dir)
 vim.opt.rtp:prepend(gitlab_snippets_dir)
 
--- Load required modules
 require("plenary.busted")
 ```
 
-**2.5.2 Makefile Integration**
-
-**File:** `Makefile`
+**Simple Makefile:**
 
 ```makefile
-.PHONY: test test-watch test-coverage lint format
+.PHONY: test
 
 # Run all tests
 test:
 	nvim --headless -c "PlenaryBustedDirectory tests/ {minimal_init = 'tests/minimal_init.lua'}"
-
-# Run tests with watch mode (requires entr)
-test-watch:
-	find lua/ tests/ -name "*.lua" | entr -c make test
-
-# Run specific test file
-test-file:
-	nvim --headless -c "PlenaryBustedFile $(FILE) {minimal_init = 'tests/minimal_init.lua'}"
-
-# Format code with stylua
-format:
-	stylua lua/ tests/
-
-# Lint code
-lint:
-	luacheck lua/ --config .luacheckrc
-
-# Generate test coverage (if available)
-test-coverage:
-	@echo "Coverage reporting not implemented yet"
 ```
 
-#### 2.6 Testing Implementation Timeline
+#### 2.5 Realistic Implementation Timeline
 
-| Phase                       | Tasks                            | Duration        | Dependencies        |
-| --------------------------- | -------------------------------- | --------------- | ------------------- |
-| **Phase 1: Infrastructure** | Minimal test setup, basic runner | 4-6 hours       | None                |
-| **Phase 2: Config Tests**   | Complete config module testing   | 3-4 hours       | Phase 1             |
-| **Phase 3: API Tests**      | HTTP mocking, API endpoint tests | 8-12 hours      | Phase 1, Mock setup |
-| **Phase 4: Health Tests**   | Health check validation          | 2-3 hours       | Phase 1             |
-| **Phase 5: Picker Tests**   | Limited picker logic testing     | 4-6 hours       | Phase 1, API mocks  |
-| **Phase 6: Integration**    | End-to-end workflow testing      | 6-8 hours       | All previous        |
-| **Total**                   |                                  | **30-43 hours** |                     |
+| Phase                    | Tasks                          | Duration   |
+| ------------------------ | ------------------------------ | ---------- |
+| **Basic Infrastructure** | Test setup, config tests      | 2 hours    |
+| **Health Tests**         | Dependency validation          | 1 hour     |
+| **Total**               |                                | **3 hours**|
 
 ---
 
